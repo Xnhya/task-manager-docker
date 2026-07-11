@@ -19,7 +19,8 @@ function getAllTasks() {
  * @returns {Object|null} La tarea encontrada o null si no existe.
  */
 function getTaskById(id) {
-  return taskStore.getById(id);
+  const task = taskStore.getById(id);
+  return task !== undefined ? task : null;
 }
 
 /**

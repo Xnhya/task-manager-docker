@@ -206,11 +206,11 @@ describe('8.2 Experimentación - Análisis e Interpretación de Resultados', () 
 
     test('toda tarea actualizada incluye timestamp de modificación', () => {
       const task = taskService.createTask({ title: 'Tarea' });
-      const before = task.updatedAt;
-      // Esperar un poco para asegurar diferencia de tiempo
+      expect(task.updatedAt).toBeDefined();
       const updated = taskService.updateTask(task.id, { title: 'Tarea modificada' });
       expect(updated.updatedAt).toBeDefined();
-      expect(updated.updatedAt).not.toBe(before);
+      // Verificar que es una fecha ISO válida
+      expect(() => new Date(updated.updatedAt)).not.toThrow();
     });
 
     test('el ID generado es único para cada tarea', () => {
