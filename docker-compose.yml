@@ -1,10 +1,43 @@
 version: "3.9"
+
 services:
   task-manager:
     build: .
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - PORT=3000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=usuario_tarea
+      - DB_PASSWORD=password_secreto
+      - DB_NAME=task_db
+    depends_on:
+      - db
     restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=usuario_tarea
+      - POSTGRES_PASSWORD=password_secreto
+      - POSTGRES_DB=task_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Esto inyecta tu archivo SQL para que se ejecute al iniciar
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
